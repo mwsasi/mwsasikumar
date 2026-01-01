@@ -1,15 +1,16 @@
 import { GoogleGenAI, Type } from "@google/genai";
-import { NutritionData } from "../types";
-
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+import { NutritionData } from "../types.ts";
 
 export const analyzeFood = async (foodQuery: string): Promise<NutritionData> => {
+  // Re-initialize inside to ensure API_KEY is correctly pulled from environment
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: "gemini-3-flash-preview",
       contents: `Analyze the nutritional value for a standard serving size of: "${foodQuery}". 
-      If the input is not a recognized food item (e.g., 'brick', 'laptop', 'anger'), set isValidFood to false.
-      Provide realistic estimates if exact data is variable.`,
+      If the input is not a recognized food item, set isValidFood to false.
+      Otherwise, provide detailed nutritional estimates for a typical portion.`,
       config: {
         responseMimeType: "application/json",
         responseSchema: {
@@ -17,32 +18,31 @@ export const analyzeFood = async (foodQuery: string): Promise<NutritionData> => 
           properties: {
             isValidFood: { type: Type.BOOLEAN },
             foodName: { type: Type.STRING },
-            servingSize: { type: Type.STRING, description: "e.g., '1 medium apple (182g)'" },
+            servingSize: { type: Type.STRING },
             calories: { type: Type.NUMBER },
             macros: {
               type: Type.OBJECT,
               properties: {
-                protein: { type: Type.NUMBER, description: "in grams" },
-                carbs: { type: Type.NUMBER, description: "in grams" },
-                fat: { type: Type.NUMBER, description: "in grams" },
+                protein: { type: Type.NUMBER },
+                carbs: { type: Type.NUMBER },
+                fat: { type: Type.NUMBER },
               },
               required: ["protein", "carbs", "fat"],
             },
             details: {
               type: Type.OBJECT,
               properties: {
-                fiber: { type: Type.NUMBER, description: "in grams" },
-                sugar: { type: Type.NUMBER, description: "in grams" },
-                sodium: { type: Type.NUMBER, description: "in milligrams" },
-                cholesterol: { type: Type.NUMBER, description: "in milligrams" },
+                fiber: { type: Type.NUMBER },
+                sugar: { type: Type.NUMBER },
+                sodium: { type: Type.NUMBER },
+                cholesterol: { type: Type.NUMBER },
               },
               required: ["fiber", "sugar", "sodium", "cholesterol"],
             },
-            summary: { type: Type.STRING, description: "A brief, 1-2 sentence nutritional overview." },
+            summary: { type: Type.STRING },
             healthTips: {
               type: Type.ARRAY,
               items: { type: Type.STRING },
-              description: "3 short, bullet-point style health facts or tips about this food.",
             },
           },
           required: ["isValidFood", "foodName", "servingSize", "calories", "macros", "details", "summary", "healthTips"],
@@ -52,7 +52,7 @@ export const analyzeFood = async (foodQuery: string): Promise<NutritionData> => 
 
     const text = response.text;
     if (!text) {
-      throw new Error("No response from AI");
+      throw new Error("Empty response from Gemini API");
     }
 
     return JSON.parse(text) as NutritionData;

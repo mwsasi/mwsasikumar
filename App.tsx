@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { SearchBar } from './components/SearchBar';
-import { NutritionDisplay } from './components/NutritionDisplay';
-import { analyzeFood } from './services/geminiService';
-import { NutritionData } from './types';
+import { SearchBar } from './components/SearchBar.tsx';
+import { NutritionDisplay } from './components/NutritionDisplay.tsx';
+import { analyzeFood } from './services/geminiService.ts';
+import { NutritionData } from './types.ts';
 import { Loader2, UtensilsCrossed } from 'lucide-react';
 
 const App: React.FC = () => {
@@ -35,7 +35,7 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 pb-20">
       {/* Header */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-10 shadow-sm">
+      <header className="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <div className="bg-emerald-500 p-2 rounded-lg text-white">
@@ -65,33 +65,32 @@ const App: React.FC = () => {
 
         {/* Loading State */}
         {loading && (
-          <div className="flex flex-col items-center justify-center py-20 space-y-4 animate-in fade-in duration-500">
+          <div className="flex flex-col items-center justify-center py-20 space-y-4 animate-pulse">
             <Loader2 className="w-10 h-10 text-emerald-500 animate-spin" />
-            <p className="text-slate-500 font-medium">Analyzing nutritional composition...</p>
+            <p className="text-slate-500 font-medium">Consulting nutritional database...</p>
           </div>
         )}
 
         {/* Error State */}
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center animate-in slide-in-from-bottom-4 duration-300">
+          <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center shadow-sm">
             <p className="text-red-600 font-medium">{error}</p>
           </div>
         )}
 
         {/* Results State */}
         {!loading && data && (
-          <div className="animate-in slide-in-from-bottom-8 duration-500">
+          <div className="transition-all duration-500">
              <NutritionDisplay data={data} />
           </div>
         )}
 
-        {/* Empty State / Initial placeholder */}
+        {/* Initial Empty State */}
         {!loading && !data && !error && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 opacity-50 select-none pointer-events-none filter blur-[1px]">
-             {/* Decorative placeholder cards to make the initial screen look less empty */}
-             <div className="h-32 bg-white rounded-xl border border-slate-200"></div>
-             <div className="h-32 bg-white rounded-xl border border-slate-200"></div>
-             <div className="h-32 bg-white rounded-xl border border-slate-200"></div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 opacity-30 select-none pointer-events-none">
+             <div className="h-32 bg-white rounded-xl border border-dashed border-slate-300"></div>
+             <div className="h-32 bg-white rounded-xl border border-dashed border-slate-300"></div>
+             <div className="h-32 bg-white rounded-xl border border-dashed border-slate-300"></div>
           </div>
         )}
       </main>

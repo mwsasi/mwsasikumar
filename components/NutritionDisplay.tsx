@@ -1,6 +1,6 @@
 import React from 'react';
-import { NutritionData } from '../types';
-import { MacroChart } from './MacroChart';
+import { NutritionData } from '../types.ts';
+import { MacroChart } from './MacroChart.tsx';
 import { Flame, CheckCircle2, Info } from 'lucide-react';
 
 interface NutritionDisplayProps {
@@ -37,7 +37,7 @@ export const NutritionDisplay: React.FC<NutritionDisplayProps> = ({ data }) => {
             <span className="w-1 h-6 bg-emerald-500 rounded-full mr-3"></span>
             Macronutrients
           </h3>
-          <div className="flex-1 flex flex-col items-center justify-center">
+          <div className="flex-1 flex flex-col items-center justify-center min-h-[250px]">
              <MacroChart protein={macros.protein} carbs={macros.carbs} fat={macros.fat} />
           </div>
           <div className="grid grid-cols-3 gap-2 mt-6">
@@ -52,7 +52,7 @@ export const NutritionDisplay: React.FC<NutritionDisplayProps> = ({ data }) => {
            <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
             <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center">
               <span className="w-1 h-6 bg-indigo-500 rounded-full mr-3"></span>
-              Micronutrients & Details
+              Nutrition Details
             </h3>
             <div className="space-y-4">
               <DetailRow label="Dietary Fiber" value={`${details.fiber}g`} />
