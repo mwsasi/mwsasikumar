@@ -17,7 +17,7 @@
       }
     </style>
     <script>
-      // Shim process object for browser compatibility
+      // Shim process object for browser compatibility before any modules load
       window.process = window.process || { env: {} };
     </script>
     <script type="importmap">
@@ -37,6 +37,7 @@
   </head>
   <body>
     <div id="root"></div>
+    <!-- The main entry point for the application -->
     <script type="module" src="index.tsx"></script>
   </body>
 </html>
