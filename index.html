@@ -11,19 +11,29 @@
         font-family: 'Inter', sans-serif;
         background-color: #f8fafc;
       }
-    </style>
-    <script type="importmap">
-    {
-      "imports": {
-        "lucide-react": "https://esm.sh/lucide-react@^0.560.0",
-        "react-dom/": "https://esm.sh/react-dom@^19.2.1/",
-        "@google/genai": "https://esm.sh/@google/genai@^1.33.0",
-        "react/": "https://esm.sh/react@^19.2.1/",
-        "react": "https://esm.sh/react@^19.2.1",
-        "recharts": "https://esm.sh/recharts@^3.5.1"
+      /* Ensure Recharts containers have a base height for visibility */
+      .recharts-responsive-container {
+        min-height: 250px;
       }
-    }
+    </style>
+    <script>
+      // Shim process object for browser compatibility
+      window.process = window.process || { env: {} };
     </script>
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@19.0.0",
+    "react-dom": "https://esm.sh/react-dom@19.0.0",
+    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+    "lucide-react": "https://esm.sh/lucide-react@0.460.0",
+    "@google/genai": "https://esm.sh/@google/genai@1.33.0",
+    "recharts": "https://esm.sh/recharts@2.13.0?deps=react@19.0.0,react-dom@19.0.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/"
+  }
+}
+</script>
   </head>
   <body>
     <div id="root"></div>

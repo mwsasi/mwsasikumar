@@ -2,8 +2,14 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { NutritionData } from "../types.ts";
 
 export const analyzeFood = async (foodQuery: string): Promise<NutritionData> => {
-  // Re-initialize inside to ensure API_KEY is correctly pulled from environment
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  // Use a local check to ensure the key exists before attempting connection
+  const apiKey = process.env.API_KEY;
+  
+  if (!apiKey) {
+    throw new Error("Missing Gemini API Key. Please configure the API_KEY environment variable.");
+  }
+
+  const ai = new GoogleGenAI({ apiKey });
   
   try {
     const response = await ai.models.generateContent({
@@ -52,12 +58,15 @@ export const analyzeFood = async (foodQuery: string): Promise<NutritionData> => 
 
     const text = response.text;
     if (!text) {
-      throw new Error("Empty response from Gemini API");
+      throw new Error("The AI returned an empty response.");
     }
 
     return JSON.parse(text) as NutritionData;
-  } catch (error) {
-    console.error("Gemini API Error:", error);
+  } catch (error: any) {
+    console.error("Gemini Service Error:", error);
+    if (error.message?.includes("API_KEY_INVALID")) {
+      throw new Error("Invalid API Key. Please verify your Gemini API credentials.");
+    }
     throw error;
   }
 };
